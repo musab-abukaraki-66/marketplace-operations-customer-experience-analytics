@@ -7,4 +7,4 @@
 - Dominant-category assignment (highest-priced item) is a simplification for order-level views.
 - Small sellers/segments are suppressed (<30 orders) rather than ranked.
 - Findings are associations; no causal inference.
-- Tests use SYNTHETIC fixtures; real-data execution is documented in `data_quality_report.md` status.
+- Unit tests use SYNTHETIC fixtures; the real-data run and its quality results are in `data_quality_report.md`.

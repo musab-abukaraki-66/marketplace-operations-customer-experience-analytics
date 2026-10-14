@@ -111,3 +111,28 @@ def test_full_pipeline_outputs(tmp_path):
     assert {"orders", "product_sales_value"} <= set(res["results"]["q01_monthly_trend"].columns)
     assert (tmp_path / "processed" / "fact_orders.csv").exists()
     assert (tmp_path / "charts" / "monthly_orders.png").exists()
+
+
+def _q(con, name):
+    return con.execute((Path(__file__).parents[1] / f"sql/04_business_analysis/{name}.sql").read_text()).df()
+
+
+def test_order_value_bands_reconcile(con):
+    bands = _q(con, "q09_order_value_distribution")
+    exp = con.execute("""SELECT COUNT(*), SUM(product_value) FROM fact_orders
+                         WHERE order_status NOT IN ('canceled','unavailable') AND product_value IS NOT NULL""").fetchone()
+    assert bands["orders"].sum() == exp[0]
+    assert bands["product_sales_value"].sum() == pytest.approx(exp[1], abs=0.01)
+    assert bands["order_share"].sum() == pytest.approx(1.0)
+
+
+def test_payment_band_shares_sum_to_one(con):
+    p = _q(con, "q12_payments_by_order_value_band")
+    shares = p[["credit_card_share", "boleto_share", "voucher_share", "debit_card_share"]].sum(axis=1)
+    # not_defined payments are the only other type; shares must not exceed 1
+    assert (shares <= 1.0 + 1e-9).all()
+
+
+def test_new_value_and_growth_queries_run(con):
+    for q in ["q10_order_value_by_category", "q11_order_value_by_state", "q13_category_growth"]:
+        assert _q(con, q) is not None
