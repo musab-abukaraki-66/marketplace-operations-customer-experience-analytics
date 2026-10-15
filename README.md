@@ -48,7 +48,7 @@ Descriptive associations from the real data, not causal claims; "product sales v
 | Charts | 6 charts in [`reports/charts/`](reports/charts) generated from the real data |
 | Exploratory notebook | [`notebooks/01_exploratory_data_analysis.ipynb`](notebooks/01_exploratory_data_analysis.ipynb), executed on the real data |
 | Power BI `.pbix` | **Not built** (no Power BI Desktop). Model and DAX are specified in [`powerbi/`](powerbi/README.md), unexecuted |
-| GitHub Actions | Workflow defined (`.github/workflows/tests.yml`, synthetic fixture only); not verified to have run |
+| GitHub Actions | `.github/workflows/tests.yml` runs the 19 tests on the synthetic fixture; passing on GitHub |
 
 ## The simulated request
 Marketplace leadership wants to know how orders and sales develop, how reliable deliveries are, whether late deliveries show up in reviews, how many customers return, and which sellers/segments need attention. See [business request](docs/business_request.md) (fictional; no real company or stakeholder) and [project charter](docs/project_charter.md).
